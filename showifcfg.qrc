@@ -2,4 +2,7 @@
 <qresource>
   <file alias="main.qml">qml/main.qml</file>
 </qresource>
+<qresource>
+  <file alias="icon.png">images/showifcfg.png</file>
+</qresource>
 </RCC>

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=0.1.0
+Type=Application
+Name=showifcfg
+GenericName=showifcdg
+Comment=Utility to display ip interface configurations
+Exec=showifcfg
+Icon=showifcfg
+Categories=Utility;Network;

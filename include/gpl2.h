@@ -1,4 +1,4 @@
-#ifndef SHOW_SHELL_H
+
 
 /****************************************************************
  * This file is distributed under the following license:
@@ -21,35 +21,3 @@
  *  Boston, MA  02110-1301, USA.
  ****************************************************************/
 
-
-#include <QProcess>
-#include <QObject>
-#include <QTimer>
-
-class ShowShell : public QObject
-{
-Q_OBJECT
-public:
-
-  ShowShell (QObject *parent = 0);
-
-  Q_INVOKABLE void runShell ();
-  Q_INVOKABLE void startTimer (int secs);
-  Q_INVOKABLE void stopTimer ();
-
-private slots:
-
-  void readOutput ();
-
-signals:
-
-  void newData (const QString & data);
-
-private:
-
-  QProcess        process;
-  QTimer          refreshTimer;
-};
-
-
-#endif
