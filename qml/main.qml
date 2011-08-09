@@ -55,7 +55,8 @@ Rectangle {
     id: refreshButton
     width: 96; height: 28
     color: "#77ff77"
-    opacity: 0.7
+    border.color: Qt.darker (color, 2.0)
+    opacity: 0.6
     radius: 0.5*height
     anchors {
       right: parent.right
@@ -77,7 +78,8 @@ Rectangle {
     id: holdButton
     width: 96; height: 28
     color: "#ff7777"
-    opacity: 0.7
+    border.color: Qt.darker (color, 2.0)
+    opacity: 0.6
     radius: 0.5*height
     anchors {
       right: refreshButton.left
