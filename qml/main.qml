@@ -31,7 +31,6 @@ Rectangle {
   ShowShell {
     id: showShell
     onNewData: {
-      console.log ("have new data")
       displayText.text = data
     }
   }
@@ -45,10 +44,9 @@ Rectangle {
       id: displayBox
       height: displayText.height
       width: displayText.width
-      color: Qt.lighter (shellDisplay.color)
+      color: shellDisplay.color
       TextEdit {
         id: displayText
-        readOnly: true
         text: qsTr ("no data")
       }
     }
@@ -85,7 +83,8 @@ Rectangle {
       right: refreshButton.left
        top: parent.top
     }
-    property string holdLabelText: shellDisplay.holding ? qsTr ("Run") : qsTr ("Hold")
+    property string holdLabelText: shellDisplay.holding ? 
+                                    qsTr ("Run") : qsTr ("Hold")
     MouseArea {
       anchors.fill: parent
       onClicked: {
