@@ -2,7 +2,7 @@
 MYNAME = showifcfg
 
 TEMPLATE = app
-VERSION = 0.1.2
+VERSION = 0.2.0
 
 QT += core gui declarative
 
@@ -18,7 +18,7 @@ RCC_DIR = temp
 
 INCLUDEPATH += include/
 
-SOURCES = src/showshell.cpp src/main.cpp
-HEADERS = include/showshell.h
+SOURCES = src/main.cpp
+HEADERS = 
 
 INSTALLS = showifcfg

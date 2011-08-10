@@ -24,7 +24,6 @@
 #include <QDeclarativeView>
 #include <QDeclarativeContext>
 #include <QIcon>
-#include "showshell.h"
 #include <qdeclarative.h>
 
 int
@@ -34,8 +33,6 @@ main (int argc, char *argv[])
 
 
   QDeclarativeView * view = new QDeclarativeView;
-
-  qmlRegisterType<ShowShell> ("net.sf.moui",1,0,"ShowShell");
 
   view->setWindowIcon (QIcon (":/icon.png"));
   view->setSource (QUrl ("qrc:main.qml"));

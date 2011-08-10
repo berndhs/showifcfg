@@ -21,7 +21,7 @@
  ****************************************************************/
 
 import Qt 4.7
-import net.sf.moui 1.0
+import moui.geuzen.utils 1.0
 
 Rectangle {
   id: shellDisplay
@@ -107,5 +107,6 @@ Rectangle {
   }
   Component.onCompleted: {
     showShell.startTimer (60)
+    showShell.runShell ("ifconfig")
   }
 }
