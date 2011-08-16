@@ -58,9 +58,7 @@ Rectangle {
           }
           MouseArea {
             anchors.fill: parent
-            onClicked: {
-              interfaceDetailBox.toggleVisible ()
-            }
+            onClicked: { interfaceDetailBox.toggleVisible () }
           }
         } // Rect
 
@@ -78,6 +76,10 @@ Rectangle {
             anchors { centerIn: parent }
             text: attributes
           } // Text
+          MouseArea {
+            anchors.fill: parent
+            onClicked: { interfaceDetailBox.toggleVisible () }
+          }
         } // Rect
       } // Row
       Rectangle {
