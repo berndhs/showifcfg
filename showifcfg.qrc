@@ -1,6 +1,6 @@
 <RCC version="1.0">
 <qresource>
-  <file alias="main.qml">qml/main.qml</file>
+  <file alias="ipaddr.qml">qml/ipaddr.qml</file>
 </qresource>
 <qresource>
   <file alias="icon.png">images/showifcfg.png</file>
