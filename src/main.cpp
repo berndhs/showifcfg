@@ -69,7 +69,8 @@ main (int argc, char *argv[])
   view->setSource (QUrl ("qrc:ipaddr.qml"));
   //view->setSource (QUrl::fromLocalFile ("qml/main.qml"));
   if (isPhone) {
-    view->setGeometry (0,0,800,480);
+    view->setGeometry (0,0,800,480); // won't be full screen on N950 without this
+    view->showFullScreen ();         // that is probably a bug in harmattan
   } else {
     view->setGeometry (0,0,500,300);
   }
