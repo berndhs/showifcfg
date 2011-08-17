@@ -21,6 +21,7 @@
  ****************************************************************/
 
 #include <QApplication>
+#include <QDesktopWidget>
 #include <QDeclarativeView>
 #include <QDeclarativeEngine>
 #include <QDeclarativeContext>
@@ -70,8 +71,8 @@ main (int argc, char *argv[])
   view->setWindowIcon (QIcon (":/icon.png"));
   view->setSource (QUrl ("qrc:ipaddr.qml"));
   if (isPhone) {
-    view->setGeometry (0,0,800,800); // won't be full screen on N950 without this
-    view->showFullScreen ();         // that is probably a bug in harmattan
+    view->setGeometry (app.desktop()->screenGeometry());
+    view->showFullScreen ();
   } else {
     view->setGeometry (0,0,500,300);
   }

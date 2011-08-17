@@ -27,6 +27,7 @@ import moui.geuzen.utils.static 1.0
 Rectangle {
   id: mainBox
   color: "transparent"
+  x: 0; y:0
   property color mainColor: "yellow"
   property int rowHeight: (isProbablyPhone ? 64 : 42)
   property bool isPortrait: isProbablyPhone
