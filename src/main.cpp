@@ -30,6 +30,7 @@
 #include <qdeclarative.h>
 #include "ip-list.h"
 #include "qml-text-browser.h"
+#include "orientation.h"
 
 #include <QDebug>
 
@@ -64,12 +65,12 @@ main (int argc, char *argv[])
 
   qmlRegisterType<geuzen::IpList>(uri, 1, 0, "GeuzenIpList");
   qmlRegisterType<geuzen::QmlTextBrowser>(uri, 1, 0, "GeuzenTextBrowser");
+  qmlRegisterType<geuzen::OrientationWatcher>(uri, 1, 0, "GeuzenOrientation");
 
   view->setWindowIcon (QIcon (":/icon.png"));
   view->setSource (QUrl ("qrc:ipaddr.qml"));
-  //view->setSource (QUrl::fromLocalFile ("qml/main.qml"));
   if (isPhone) {
-    view->setGeometry (0,0,800,480); // won't be full screen on N950 without this
+    view->setGeometry (0,0,800,800); // won't be full screen on N950 without this
     view->showFullScreen ();         // that is probably a bug in harmattan
   } else {
     view->setGeometry (0,0,500,300);

@@ -1,3 +1,8 @@
+* Tue Aud 16 2011 Bernd Stramm <bernd.stramm@gmail.com> - 0.3.0
+- go back to standalone for harmattan
+- do rotation for portrait/landscape 
+- do phone detection and change sizes for phone
+
 * Wed Aug 10 2011 Bernd Stramm <bernd.stramm@gmail.com> - 0.2.0
 - use geuzen-qml-utils plugin instead of static .cpp
 

@@ -9,7 +9,6 @@ QT += core declarative
 CONFIG += mobility
 MOBILITY += systeminfo
 MOBILITY += sensors
-MOBILITY += network
 
 QMAKE_CXXFLAGS += -std=c++0x
 
@@ -31,13 +30,15 @@ SOURCES = \
     src/ip-list.cpp \
     src/main.cpp \
     src/qml-text-browser.cpp \
+    src/orientation.cpp
 
 HEADERS = \
     include/gpl2.h \
     include/ip-interface.h \
     include/ip-list.h \
     include/property.h \
-    include/qml-text-browser.h
+    include/qml-text-browser.h \
+    include/orientation.h
 
 INSTALLS = showifcfg
 

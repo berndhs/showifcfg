@@ -37,6 +37,14 @@ Rectangle {
     id: ipList
     css: ".iplist {font-style:italic;font-size:small; color:white; background-color:green}"
   }
+  GeuzenOrientation {
+    id: orientationWatcher
+    onRotationChange: {
+      mainBox.isPortrait = portrait
+      mainBox.rotation = rotation
+    }
+  }
+
   Component {
     id: interfaceDelegate
     Column {
@@ -189,5 +197,6 @@ Rectangle {
   }
   Component.onCompleted: {
     ipList.read ()
+    orientationWatcher.start()
   }
 }

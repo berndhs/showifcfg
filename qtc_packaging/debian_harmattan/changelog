@@ -1,5 +1,8 @@
 showifcfg (0.3.0) unstable; urgency=low
 
-  * Initial Release.
+  * Initial Deb Release
+  * standalone code
+  * do rotation portrait/landscape
+  * detect phone or not for UI size changes
 
  -- Bernd Stramm <bernd@unknown>  Tue, 16 Aug 2011 09:16:16 -0400
