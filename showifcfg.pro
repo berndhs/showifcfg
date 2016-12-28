@@ -4,14 +4,14 @@ MYNAME = showifcfg
 TEMPLATE = app
 VERSION = 0.3.0
 
-QT += core declarative
+QT += core gui widgets quick qml
 
-CONFIG += mobility
-MOBILITY += systeminfo
-MOBILITY += sensors
-MOBILITY += network
+#CONFIG += mobility
+#MOBILITY += systeminfo
+#MOBILITY += sensors
+#MOBILITY += network
 
-QMAKE_CXXFLAGS += -std=c++0x
+QMAKE_CXXFLAGS += -std=c++11
 
 INCLUDEPATH += ./include
 

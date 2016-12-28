@@ -1,4 +1,4 @@
-import Qt 4.7
+import QtQuick 2.5
 import moui.geuzen.utils.static 1.0
 
 
@@ -87,7 +87,7 @@ Rectangle {
         height: 3
         width: mainWidth
         color: Qt.darker (mainColor)
-        property bool isHidden: true
+        property bool isHidden:false; // true
         function toggleVisible () {
           isHidden = !isHidden
           ipList.populateText (index, detailTextBrowser, !isHidden)
@@ -130,7 +130,9 @@ Rectangle {
   Rectangle {
     id: refreshBox
     height: rowHeight; width: mainWidth
-    color: "#f0f0f0"
+    property string normalColor: "#f0f0f0";
+    property string darkColor: "#a0a0a0";
+    color: normalColor;
     anchors { top: mainBox.top; horizontalCenter: mainBox.horizontalCenter }
     Row {
       spacing: 4
@@ -140,7 +142,7 @@ Rectangle {
         height: refreshBox.height - 8
         width: refreshBox.width * 0.45
         radius: height * 0.4
-        color: Qt.darker ( refreshBox.color, 1.2 )
+        color: Qt.darker ( refreshBox.normalColor, 1.2 )
         border.color: Qt.lighter (color, 1.1)
         border.width: 2
         Text {
@@ -149,7 +151,13 @@ Rectangle {
         }
         MouseArea {
           anchors.fill: parent
-          onClicked: { ipList.read () }
+          onPressed: {
+              refreshButton.color = refreshBox.darkColor;
+          }
+          onReleased: {
+              refreshButton.color = refreshBox.normalColor;
+              ipList.read();
+          }
         }
       }
       Rectangle {
@@ -188,6 +196,8 @@ Rectangle {
     }
   }
   Component.onCompleted: {
+      console.log("with browser",detailTextBrowser);
+      console.log ("after loaded, ipList is "+ipList);
     ipList.read ()
   }
 }

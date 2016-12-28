@@ -27,6 +27,8 @@
 #include <QStringList>
 #include <QObject>
 #include <QAbstractListModel>
+#include <QHash>
+#include <QByteArray>
 #include "ip-interface.h"
 
 namespace geuzen 
@@ -55,6 +57,8 @@ public:
 
   Q_PROPERTY (QString css READ css WRITE setCss)
   Q_PROPERTY (QString html READ html WRITE setHtml)
+
+  QHash<int, QByteArray> roleNames() const;
 
   void setCss (const QString & css);
   QString css () const;
@@ -91,6 +95,8 @@ private:
   void  addAddress (const QString & line, NetInterface & iface);
   void  addAddressAttribute (const QString & line, NetInterface & iface);
 
+
+  QHash<int, QByteArray> roles;
   QProcess      process;
   QStringList   nextCmd;
   QStringList   resultLines;

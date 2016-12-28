@@ -32,6 +32,7 @@ namespace geuzen
 QmlTextBrowser::QmlTextBrowser (QGraphicsItem *prnt)
   :QGraphicsTextItem(prnt)
 {
+  qDebug() << Q_FUNC_INFO << " at " << this;
   setTextInteractionFlags (Qt::TextSelectableByMouse
                          | Qt::TextSelectableByKeyboard
                          | Qt::LinksAccessibleByMouse
@@ -69,6 +70,7 @@ qreal
 QmlTextBrowser::getHeight () const
 {
   qreal h = boundingRect().height();
+  qDebug() << Q_FUNC_INFO << h;
   return h;
 }
 
@@ -76,6 +78,7 @@ qreal
 QmlTextBrowser::getWidth () const
 {
   qreal w = boundingRect().width();
+  qDebug() << Q_FUNC_INFO << w;
   return w;
 }
 
@@ -89,6 +92,7 @@ void
 QmlTextBrowser::setName (const QString & name)
 {
   setObjectName (QString ("QmlTextBrowser_") + name);
+  qDebug() << Q_FUNC_INFO << objectName();
 }
 
 

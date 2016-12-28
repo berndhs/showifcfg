@@ -20,35 +20,27 @@
  *  Boston, MA  02110-1301, USA.
  ****************************************************************/
 
-#include <QApplication>
-#include <QDeclarativeView>
-#include <QDeclarativeEngine>
-#include <QDeclarativeContext>
+#include <QGuiApplication>
+#include <QQuickView>
+#include <QQmlEngine>
+#include <QQmlContext>
 #include <QIcon>
 #include <QFont>
-#include <QSystemDeviceInfo>
-#include <qdeclarative.h>
 #include "ip-list.h"
 #include "qml-text-browser.h"
 
 #include <QDebug>
 
-QTM_USE_NAMESPACE
-
 int
 main (int argc, char *argv[])
 {
-  QApplication app (argc, argv);
+  QGuiApplication app (argc, argv);
 
-  QSystemDeviceInfo sdi;
+  bool isPhone (false); /*(!(imsi.isEmpty() || imei.isEmpty()));*/
 
-  QString imsi = sdi.imsi();
-  QString imei = sdi.imei();
-  bool isPhone (!(imsi.isEmpty() || imei.isEmpty()));
-
-  QDeclarativeView * view = new QDeclarativeView;
-  QDeclarativeEngine * engine = view->engine();
-  QDeclarativeContext * context = view->rootContext();
+  QQuickView * view = new QQuickView(0);
+  QQmlEngine * engine = view->engine();
+  QQmlContext * context = view->rootContext();
 
   if (context) {
     context->setContextProperty ("isProbablyPhone", QVariant(isPhone));
@@ -65,7 +57,7 @@ main (int argc, char *argv[])
   qmlRegisterType<geuzen::IpList>(uri, 1, 0, "GeuzenIpList");
   qmlRegisterType<geuzen::QmlTextBrowser>(uri, 1, 0, "GeuzenTextBrowser");
 
-  view->setWindowIcon (QIcon (":/icon.png"));
+  app.setWindowIcon (QIcon (":/icon.png"));
   view->setSource (QUrl ("qrc:ipaddr.qml"));
   //view->setSource (QUrl::fromLocalFile ("qml/main.qml"));
   if (isPhone) {
@@ -75,7 +67,7 @@ main (int argc, char *argv[])
     view->setGeometry (0,0,500,300);
   }
   qDebug () << " view set to size " << view->size();
-  view->setResizeMode (QDeclarativeView::SizeRootObjectToView);
+  view->setResizeMode (QQuickView::SizeRootObjectToView);
 
   view->show ();
   QObject::connect (engine, SIGNAL (quit()),&app, SLOT(quit()));

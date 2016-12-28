@@ -33,10 +33,9 @@ IpList::IpList (QObject *parent)
   :QAbstractListModel (parent),
    process (this)
 {
-  QHash<int, QByteArray> roles;
+  roles[Qt::DisplayRole] = "display";
   roles[Type_Name] = "name";
   roles[Type_Attributes] = "attributes";
-  setRoleNames(roles);
   connect (&process, SIGNAL (readyRead()),
            this, SLOT (getData()));
   connect (&process, SIGNAL (finished (int, QProcess::ExitStatus)),
@@ -85,13 +84,17 @@ IpList::setHtml (const QString & html)
 int 
 IpList::rowCount (const QModelIndex & index) const
 {
+  qDebug() << Q_FUNC_INFO << index;
   Q_UNUSED (index)
-  return count();
+  int nrows = count();
+  qDebug() << "\ttell them " << nrows << "rows";
+  return nrows;
 }
 
 QVariant
 IpList::data (const QModelIndex & index, int role) const
 {
+  qDebug() << Q_FUNC_INFO << index;
   QVariant retvar (QString ("unknown"));
   int row = index.row ();
   if (0 > row || row >= count() ) {
@@ -107,6 +110,7 @@ IpList::data (const QModelIndex & index, int role) const
     default:
       break;
   }
+  qDebug() << Q_FUNC_INFO << "return" << retvar;
   return retvar;
 }
 
@@ -121,7 +125,12 @@ IpList::populateText (int index, QObject * browser, bool visible)
     } else {
       qmlBrowser->setHtml ("");
     }
-  }
+    }
+}
+
+QHash<int, QByteArray> IpList::roleNames() const
+{
+  return roles;
 }
 
 void
@@ -204,7 +213,10 @@ IpList::getData ()
 {
   QByteArray bytes = process.readAll ();
   QString newRaw (QString::fromUtf8(bytes));
-  resultLines.append (newRaw.split ('\n'));
+  QStringList lines = newRaw.split('\n');
+  qDebug() << " process had " << lines.count() << "lines to say";
+  resultLines.append (lines);
+  qDebug() << "resultLines now has" << resultLines.count() << "lines";
 }
 
 void 
@@ -217,17 +229,19 @@ IpList::doneFinished (int exitCode, QProcess::ExitStatus exitStatus)
   emit done ();
   QModelIndex topLeft = (QAbstractListModel::index (0,0));
   QModelIndex botRight = QAbstractListModel::index (count()-1, 0);
+  qDebug() << "data changed from" << topLeft.row() << " to " << botRight.row();
   emit dataChanged (topLeft, botRight);
-  reset ();
+//  reset ();
 }
 
 void
 IpList::analyze ()
 {
+  qDebug() << Q_FUNC_INFO;
   interfaces.clear ();
   NetInterface * currentIF = new NetInterface;
   auto lit = resultLines.begin();
-  for (;lit != resultLines.end(); lit++) {
+  for (;lit != resultLines.end(); ++lit) {
     QString line (*lit);
     if (line.isEmpty()) {
       continue;
@@ -245,6 +259,7 @@ IpList::analyze ()
   if (!currentIF->isEmpty()) {
     interfaces.append (currentIF);
   }
+  qDebug() << Q_FUNC_INFO << "came up with " << interfaces.count();
 }
 
 void
