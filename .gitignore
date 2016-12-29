@@ -2,3 +2,5 @@
 Makefile
 *.pro.user
 temp/
+.qmake.stash
+showifcfg
