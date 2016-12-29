@@ -34,6 +34,11 @@ IpList::IpList (QObject *parent)
    process (this)
 {
   roles[Qt::DisplayRole] = "display";
+  roles[Qt::DecorationRole] = "decoration";
+  roles[Qt::EditRole] = "edit";
+  roles[Qt::ToolTipRole] = "tooltip";
+  roles[Qt::StatusTipRole] = "statustip";
+  roles[Qt::WhatsThisRole] = "whatsthis";
   roles[Type_Name] = "name";
   roles[Type_Attributes] = "attributes";
   connect (&process, SIGNAL (readyRead()),
@@ -54,6 +59,7 @@ IpList::~IpList ()
 int
 IpList::count () const
 {
+  qDebug() << Q_FUNC_INFO << interfaces.count();
   return interfaces.count();
 }
 
@@ -84,17 +90,17 @@ IpList::setHtml (const QString & html)
 int 
 IpList::rowCount (const QModelIndex & index) const
 {
-  qDebug() << Q_FUNC_INFO << index;
   Q_UNUSED (index)
   int nrows = count();
-  qDebug() << "\ttell them " << nrows << "rows";
+
+  qDebug() << Q_FUNC_INFO << index << nrows;
   return nrows;
 }
 
 QVariant
 IpList::data (const QModelIndex & index, int role) const
 {
-  qDebug() << Q_FUNC_INFO << index;
+  qDebug() << Q_FUNC_INFO << index << role;
   QVariant retvar (QString ("unknown"));
   int row = index.row ();
   if (0 > row || row >= count() ) {
@@ -118,6 +124,7 @@ IpList::data (const QModelIndex & index, int role) const
 void
 IpList::populateText (int index, QObject * browser, bool visible)
 {
+  qDebug() <<Q_FUNC_INFO << index << browser;
   QmlTextBrowser * qmlBrowser = qobject_cast<QmlTextBrowser*>(browser);
   if (qmlBrowser) {
     if (visible) {
@@ -181,6 +188,12 @@ IpList::read ()
   QTimer::singleShot (1, this, SLOT (runCommand()));
 }
 
+void IpList::sayFresh()
+{
+  qDebug() << Q_FUNC_INFO << "lie about fresh data";
+  emit freshData();
+}
+
 const NetInterface *
 IpList::interface (unsigned int index) const
 {
@@ -222,6 +235,7 @@ IpList::getData ()
 void 
 IpList::doneFinished (int exitCode, QProcess::ExitStatus exitStatus)
 {
+  qDebug() << Q_FUNC_INFO << exitCode << exitStatus;
   Q_UNUSED (exitCode)
   Q_UNUSED (exitStatus)
   getData (); 
@@ -229,9 +243,19 @@ IpList::doneFinished (int exitCode, QProcess::ExitStatus exitStatus)
   emit done ();
   QModelIndex topLeft = (QAbstractListModel::index (0,0));
   QModelIndex botRight = QAbstractListModel::index (count()-1, 0);
-  qDebug() << "data changed from" << topLeft.row() << " to " << botRight.row();
+//  qDebug() << Q_FUNC_INFO << "\n\t\tdata changed from" << topLeft.row() << " to " << botRight.row();
+//  for (int r=0;r<count(); ++r) {
+//    qDebug() << "\n\t\t" << r;
+//    topLeft = this->index(r,0);
+//    botRight = this->index(r,1);
+//    qDebug() << "\n\t\tchanged " << topLeft << "\n\t\t\t" << botRight;
+//    emit dataChanged (topLeft,botRight);
+//  }
+  qDebug() << "\n\t\tchanged " << topLeft << "\n\t\t\t" << botRight;
   emit dataChanged (topLeft, botRight);
-//  reset ();
+//  revert ();
+  emit freshData();
+  qDebug() << "after emit fresh";
 }
 
 void

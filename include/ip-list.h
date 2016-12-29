@@ -49,6 +49,7 @@ public:
   
   Q_INVOKABLE void read ();
   
+  Q_INVOKABLE void sayFresh();
   Q_INVOKABLE int count () const;
   Q_INVOKABLE bool isEmpty () const;
   Q_INVOKABLE const NetInterface * interface (unsigned int index) const;
@@ -75,6 +76,7 @@ private slots:
 
 signals:
 
+  void freshData();
   void done ();
   void htmlChanged ();
 

@@ -24,6 +24,7 @@
 #include <QString>
 #include <QStringList>
 #include <QObject>
+#include <QDebug>
 #include <QAbstractListModel>
 #include "property.h"
 
@@ -60,6 +61,7 @@ public:
   Q_INVOKABLE void clear ();
 
   const QStringList attributes () const {
+    qDebug() << Q_FUNC_INFO;
     return theAttributes;
   }
 

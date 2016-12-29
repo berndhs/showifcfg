@@ -32,7 +32,7 @@ namespace geuzen
 QmlTextBrowser::QmlTextBrowser (QGraphicsItem *prnt)
   :QGraphicsTextItem(prnt)
 {
-  qDebug() << Q_FUNC_INFO << " at " << this;
+  qDebug() << Q_FUNC_INFO << " at " << prnt;
   setTextInteractionFlags (Qt::TextSelectableByMouse
                          | Qt::TextSelectableByKeyboard
                          | Qt::LinksAccessibleByMouse
