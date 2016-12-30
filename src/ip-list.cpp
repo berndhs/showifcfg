@@ -121,55 +121,56 @@ IpList::data (const QModelIndex & index, int role) const
 }
 
 
-void
-IpList::populateText (int index, QObject * browser, bool visible)
-{
-  qDebug() <<Q_FUNC_INFO << index << browser;
-  QmlTextBrowser * qmlBrowser = qobject_cast<QmlTextBrowser*>(browser);
-  if (qmlBrowser) {
-    if (visible) {
-      fillBrowser (index, qmlBrowser);     
-    } else {
-      qmlBrowser->setHtml ("");
-    }
-    }
-}
+//void
+//IpList::populateText (int index, QObject * browser, bool visible)
+//{
+//  qDebug() <<Q_FUNC_INFO << index << browser;
+////  QmlTextBrowser * qmlBrowser = qobject_cast<QmlTextBrowser*>(browser);
+//  if (qmlBrowser) {
+//    if (visible) {
+//      fillBrowser (index, qmlBrowser);
+//    } else {
+////      qmlBrowser->setHtml ("");
+//    }
+//  }
+//}
 
 QHash<int, QByteArray> IpList::roleNames() const
 {
   return roles;
 }
 
-void
-IpList::fillBrowser (int ifaceNdx, QmlTextBrowser * browser)
-{
-  if (!browser) {
-    return;
-  }
-  if (ifaceNdx < 0 || ifaceNdx >= interfaces.count()) {
-    browser->setHtml ("invalid index");
-    return;
-  }
-  const NetInterface * iface = interface (ifaceNdx);
-  QString head ("<head>\n<style type=text/css>\n");
-  head.append (theCss);
-  head.append ("\n</style>\n</head>\n");
-  QString body ("<body>\n");
-  body.append ("<table class=\"iplist\">\n");
-  for (int i=0; i<iface->addressCount(); i++) {
-    body.append ("<tr>\n");
-    body.append ("<td>");
-    body.append (iface->address(i)->type());
-    body.append ("</td><td>");
-    body.append (iface->address(i)->address());
-    body.append ("</td>\n</tr>\n<tr><td></td><td>");
-    body.append (iface->address(i)->attributes().join("<br>\n"));
-    body.append ("</td>\n</tr>\n");
-  }
-  body.append ("</table>\n</body>");
-  theHtml = body;
-  browser->setHtml (head + body);
-}
+//void
+//IpList::fillBrowser (int ifaceNdx, QmlTextBrowser * browser)
+//{
+//  if (!browser) {
+//    return;
+//  }
+//  if (ifaceNdx < 0 || ifaceNdx >= interfaces.count()) {
+//    browser->setHtml ("invalid index");
+//    return;
+//  }
+//  const NetInterface * iface = interface (ifaceNdx);
+//  QString head ("<head>\n<style type=text/css>\n");
+//  head.append (theCss);
+//  head.append ("\n</style>\n</head>\n");
+//  QString body ("<body>\n");
+//  body.append ("<table class=\"iplist\">\n");
+//  for (int i=0; i<iface->addressCount(); i++) {
+//    body.append ("<tr>\n");
+//    body.append ("<td>");
+//    body.append (iface->address(i)->type());
+//    body.append ("</td><td>");
+//    body.append (iface->address(i)->address());
+//    body.append ("</td>\n</tr>\n<tr><td></td><td>");
+//    body.append (iface->address(i)->attributes().join("<br>\n"));
+//    body.append ("</td>\n</tr>\n");
+//  }
+//  body.append ("</table>\n</body>");
+//  theHtml = body;
+//  browser->setValue(theHtml);
+////  browser->setHtml (head + body);
+//}
  
 bool
 IpList::isEmpty () const
@@ -256,6 +257,14 @@ IpList::doneFinished (int exitCode, QProcess::ExitStatus exitStatus)
 //  revert ();
   emit freshData();
   qDebug() << "after emit fresh";
+
+  int rc = rowCount();
+  for (int r=0; r<rc; ++r) {
+    QModelIndex rindex = QAbstractListModel::index (r,0);
+    qDebug() << "\n\n=========\nInterface " << r << " called " << data(rindex,Type_Name);
+    qDebug() << "\tvalues" << data(rindex,Type_Attributes);
+  }
+
 }
 
 void
@@ -264,7 +273,7 @@ IpList::analyze ()
   qDebug() << Q_FUNC_INFO;
   interfaces.clear ();
   NetInterface * currentIF = new NetInterface;
-  auto lit = resultLines.begin();
+  auto lit = resultLines.begin();\
   for (;lit != resultLines.end(); ++lit) {
     QString line (*lit);
     if (line.isEmpty()) {
@@ -273,6 +282,7 @@ IpList::analyze ()
     if (!line.startsWith (" ")) { // new interface
       if (!currentIF->isEmpty()) {
         interfaces.append (currentIF); // append previous one
+        qDebug() << "\n\nlast interface seen:" << currentIF->name() << currentIF->attributes();
       }
       currentIF = new NetInterface;
       parseFirstLine (line, *currentIF);
@@ -282,8 +292,10 @@ IpList::analyze ()
   }
   if (!currentIF->isEmpty()) {
     interfaces.append (currentIF);
+    qDebug() << "new interface " << currentIF;
   }
   qDebug() << Q_FUNC_INFO << "came up with " << interfaces.count();
+  qDebug() << Q_FUNC_INFO << interfaces;
 }
 
 void

@@ -29,24 +29,28 @@
 namespace geuzen
 {
 
-QmlTextBrowser::QmlTextBrowser (QGraphicsItem *prnt)
-  :QGraphicsTextItem(prnt)
+QmlTextBrowser::QmlTextBrowser (QQuickItem *prnt)
+  :QQuickTextDocument(prnt)
 {
   qDebug() << Q_FUNC_INFO << " at " << prnt;
-  setTextInteractionFlags (Qt::TextSelectableByMouse
-                         | Qt::TextSelectableByKeyboard
-                         | Qt::LinksAccessibleByMouse
-                         | Qt::LinksAccessibleByKeyboard);
+//  setTextInteractionFlags (Qt::TextSelectableByMouse
+//                         | Qt::TextSelectableByKeyboard
+//                         | Qt::LinksAccessibleByMouse
+//                         | Qt::LinksAccessibleByKeyboard);
   setObjectName ("QmlTextBrowser_");
   connect (this, SIGNAL (linkActivated(const QString &)),
            this, SLOT (doActivateLink(const QString &)));
+  emit newData();
+  pretendNew = new QTimer (this);
+  pretendNew->setInterval(2000);
+  connect (pretendNew,SIGNAL(triggered()),this,SLOT(newTimerTest()));
 }
 
-QRectF
-QmlTextBrowser::boundingRect () const
-{
-  return QGraphicsTextItem::boundingRect ();
-}
+//QRectF
+//QmlTextBrowser::boundingRect () const
+//{
+//  return QQuickTextDocument::boundingRect ();
+//}
 
 int
 QmlTextBrowser::zero ()
@@ -54,22 +58,22 @@ QmlTextBrowser::zero ()
   return 0;
 }
 
-void
-QmlTextBrowser::adjustSize ()
-{
-  QGraphicsTextItem::adjustSize ();
-}
+//void
+//QmlTextBrowser::adjustSize ()
+//{
+//  QQuickTextDocument::adjustSize ();
+//}
 
 bool
 QmlTextBrowser::event (QEvent *evt)
 {
-  return QGraphicsTextItem::event (evt);
+  return QQuickTextDocument::event (evt);
 }
 
 qreal
 QmlTextBrowser::getHeight () const
 {
-  qreal h = boundingRect().height();
+  qreal h = 100.0; /*boundingRect().height();*/
   qDebug() << Q_FUNC_INFO << h;
   return h;
 }
@@ -77,7 +81,7 @@ QmlTextBrowser::getHeight () const
 qreal
 QmlTextBrowser::getWidth () const
 {
-  qreal w = boundingRect().width();
+  qreal w = 30.0; /*boundingRect().width();*/
   qDebug() << Q_FUNC_INFO << w;
   return w;
 }
@@ -95,26 +99,45 @@ QmlTextBrowser::setName (const QString & name)
   qDebug() << Q_FUNC_INFO << objectName();
 }
 
-
-void
-QmlTextBrowser::setTextWidth (qreal wid)
+QString QmlTextBrowser::getValue() const
 {
-  QGraphicsTextItem::setTextWidth (wid);
-  emit heightChanged (getHeight());
-  emit widthChanged (getWidth());
+  return m_value;
 }
 
-void
-QmlTextBrowser::setHtml (const QString & html)
+void QmlTextBrowser::setValue(QString value)
 {
-  QGraphicsTextItem::setHtml (html);
-  emit heightChanged (getHeight());
+  m_value = value;
 }
+
+
+//void
+//QmlTextBrowser::setTextWidth (qreal wid)
+//{
+//  QQuickTextDocument::setTextWidth (wid);
+//  emit heightChanged (getHeight());
+//  emit widthChanged (getWidth());
+//}
+
+//void
+//QmlTextBrowser::setHtml (const QString & html)
+//{
+//  QQuickTextDocument::setHtml (html);
+//  emit heightChanged (getHeight());
+//}
 
 void
 QmlTextBrowser::doActivateLink (const QString & link)
 {
   emit activatedLink (link);
+}
+
+void
+QmlTextBrowser::newTimerTest()
+{
+  qDebug() << Q_FUNC_INFO;
+  int msecs = pretendNew->interval();
+  pretendNew->start(msecs);
+  emit newData();
 }
 
 

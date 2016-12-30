@@ -36,9 +36,17 @@ Rectangle {
     GeuzenIpList {
         id: ipList
         css: ".iplist {font-style:italic;font-size:small; color:white; background-color:green}"
+        onFreshData: {
+            console.log("fresh data dignal caught in ",ipList);
+            var i;
+            for (i=0; i<ipList.count(); ++i) {
+                ipListView.updateInterface(i);
+            }
+        }
     }
     Component {
         id: interfaceDelegate
+
         Column {
             Row {
                 id: interfaceRow
@@ -90,7 +98,7 @@ Rectangle {
                 property bool isHidden:false; // true
                 function toggleVisible () {
                     isHidden = !isHidden
-                    ipList.populateText (index, detailTextBrowser, !isHidden)
+//                    ipList.populateText (index, detailTextBrowser, !isHidden)
                 }
                 Rectangle {
                     id: detailListBox
@@ -98,10 +106,21 @@ Rectangle {
                     width: parent.width
                     height: detailTextBrowser.height
                     color: interfaceDetailBox.color
-                    GeuzenTextBrowser {
-                        id: detailTextBrowser
-                        name: "geuzenBrowser_" + index
+//                    GeuzenTextBrowser {
+//                        id: detailTextBrowser
+//                        name: "geuzenBrowser_" + index
+//                        onNewData: {
+//                            consol.log("detail text index ",index,
+//                                       " new data from "+name);
+//                            itemValue.text = value;
+//                        }
+//                    }
+                    Text {
+                        id: itemValue;
+                        font.pixelSize: 14;
+                        text: detailTextBrowser.value;
                     }
+
                     Connections {
                         target: ipList;
                         onFreshData: {
@@ -220,6 +239,10 @@ Rectangle {
             width: mainWidth
             anchors {
                 fill: parent
+            }
+            function updateInterface (ifIndex) {
+                console.log("updating interface "+ifIndex);
+//                ipList.populateText (ifIndex, ipListView, false)
             }
             delegate: interfaceDelegate
             model: ipList

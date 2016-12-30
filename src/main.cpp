@@ -55,7 +55,7 @@ main (int argc, char *argv[])
   const char uri[] = "moui.geuzen.utils.static";
 
   qmlRegisterType<geuzen::IpList>(uri, 1, 0, "GeuzenIpList");
-  qmlRegisterType<geuzen::QmlTextBrowser>(uri, 1, 0, "GeuzenTextBrowser");
+//  qmlRegisterType<geuzen::QmlTextBrowser>(uri, 1, 0, "GeuzenTextBrowser");
 
   app.setWindowIcon (QIcon (":/icon.png"));
   view->setSource (QUrl ("qrc:ipaddr.qml"));

@@ -100,6 +100,11 @@ public:
   Q_INVOKABLE bool isEmpty ();
   Q_INVOKABLE void clear ();
 
+signals:
+
+  void freshData();
+
+
 private:
 
   enum Data_Type {

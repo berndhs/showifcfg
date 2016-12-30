@@ -95,6 +95,7 @@ NetInterface::appendAddress (const NetAddress & address)
   NetAddress * pAddr = new NetAddress (address);
   pAddr->setParent (this);
   theAddresses.append (pAddr);
+  emit freshData();
 }
 
 } //namespace

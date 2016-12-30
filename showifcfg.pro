@@ -30,14 +30,14 @@ SOURCES = \
     src/ip-interface.cpp \
     src/ip-list.cpp \
     src/main.cpp \
-    src/qml-text-browser.cpp \
+#    src/qml-text-browser.cpp \
 
 HEADERS = \
     include/gpl2.h \
     include/ip-interface.h \
     include/ip-list.h \
     include/property.h \
-    include/qml-text-browser.h
+#    include/qml-text-browser.h
 
 INSTALLS = showifcfg
 

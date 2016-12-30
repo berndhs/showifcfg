@@ -23,46 +23,55 @@
  ****************************************************************/
 
 
-#include <QGraphicsTextItem>
+#include <QQuickTextDocument>
 #include <QGraphicsItem>
 #include <QRectF>
 #include <QEvent>
+#include <QTimer>
 
 namespace geuzen
 {
 
-class QmlTextBrowser : public QGraphicsTextItem
+class QmlTextBrowser : public QQuickTextDocument
 {
 Q_OBJECT
 
 public:
 
-  QmlTextBrowser (QGraphicsItem * parent=0);
+  QmlTextBrowser (QQuickItem * parent=0);
 
   Q_PROPERTY(qreal height READ getHeight NOTIFY heightChanged) 
   Q_PROPERTY(qreal width READ getWidth WRITE widthChanged)
-  Q_PROPERTY(QString name READ getName WRITE setName) 
+  Q_PROPERTY(QString name READ getName WRITE setName) \
+  Q_PROPERTY(QString value READ getValue WRITE setValue)
 
   Q_INVOKABLE int zero ();
 
-  Q_INVOKABLE void setHtml (const QString & html);
-  Q_INVOKABLE void setTextWidth (qreal wid);
-  Q_INVOKABLE QRectF boundingRect () const;
+//  Q_INVOKABLE void setHtml (const QString & html);
+//  Q_INVOKABLE void setTextWidth (qreal wid);
+//  Q_INVOKABLE QRectF boundingRect () const;
   Q_INVOKABLE qreal getHeight () const;
   Q_INVOKABLE qreal getWidth () const;
   Q_INVOKABLE QString getName () const;
   Q_INVOKABLE void setName (const QString & name);
-  Q_INVOKABLE void adjustSize ();
+//  Q_INVOKABLE void adjustSize ();
+
+  QString getValue() const;
+
+public slots:
+  void setValue(QString value);
 
 private slots:
 
   void doActivateLink (const QString & link);
+  void newTimerTest();
 
 signals:
 
   void activatedLink (const QString & link);
   void heightChanged (qreal height);
   void widthChanged (qreal width);
+  void newData();
 
 protected:
 
@@ -70,6 +79,8 @@ protected:
 
 private:
 
+  QString m_value;
+  QTimer * pretendNew;
 };
 
 } // namespace

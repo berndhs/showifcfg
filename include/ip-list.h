@@ -34,7 +34,7 @@
 namespace geuzen 
 {
 
-class QmlTextBrowser;
+//class QmlTextBrowser;
 
 class IpList : public QAbstractListModel
 {
@@ -54,7 +54,7 @@ public:
   Q_INVOKABLE bool isEmpty () const;
   Q_INVOKABLE const NetInterface * interface (unsigned int index) const;
 
-  Q_INVOKABLE void populateText (int index, QObject * browser, bool visible);
+//  Q_INVOKABLE void populateText (int index, QObject * browser, bool visible);
 
   Q_PROPERTY (QString css READ css WRITE setCss)
   Q_PROPERTY (QString html READ html WRITE setHtml)
@@ -88,7 +88,7 @@ private:
     Type_Attributes = Qt::UserRole+2
   };
 
-  void fillBrowser (int ifaceNdx, QmlTextBrowser * browser);
+//  void fillBrowser (int ifaceNdx, QmlTextBrowser * browser);
 
   // parsing functions
   void  analyze ();
