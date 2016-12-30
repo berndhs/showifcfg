@@ -1,15 +1,10 @@
 
-MYNAME = showifcfg
+MYNAME = shownetif
 
 TEMPLATE = app
 VERSION = 0.3.0
 
-QT += core gui widgets quick qml
-
-#CONFIG += mobility
-#MOBILITY += systeminfo
-#MOBILITY += sensors
-#MOBILITY += network
+QT += core gui widgets quick qml network
 
 QMAKE_CXXFLAGS += -std=c++11
 
@@ -17,8 +12,8 @@ INCLUDEPATH += ./include
 
 RESOURCES = $${MYNAME}.qrc
 
-TARGET = showifcfg
-showifcfg.path = /usr/local/bin
+TARGET = shownetif
+shownetif.path = /usr/local/bin
 
 MOC_DIR = temp
 OBJECTS_DIR = temp
@@ -39,7 +34,7 @@ HEADERS = \
     include/property.h \
 #    include/qml-text-browser.h
 
-INSTALLS = showifcfg
+INSTALLS = shownetif
 
 OTHER_FILES += \
     qtc_packaging/debian_harmattan/rules \
@@ -51,7 +46,7 @@ OTHER_FILES += \
     notes.txt
 
 unix:!symbian:!maemo5 {
-    target.path = /opt/showifcfg/bin
+    target.path = /opt/shownetif/bin
     INSTALLS += target
 }
 

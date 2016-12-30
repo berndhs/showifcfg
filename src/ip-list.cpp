@@ -41,10 +41,12 @@ IpList::IpList (QObject *parent)
   roles[Qt::WhatsThisRole] = "whatsthis";
   roles[Type_Name] = "name";
   roles[Type_Attributes] = "attributes";
+  roles[Type_AttribLines] = "lines";
   connect (&process, SIGNAL (readyRead()),
            this, SLOT (getData()));
   connect (&process, SIGNAL (finished (int, QProcess::ExitStatus)),
            this, SLOT (doneFinished (int, QProcess::ExitStatus)));
+  qDebug () << Q_FUNC_INFO << "roles: " << roles;
 }
 
 IpList::~IpList ()
@@ -59,7 +61,6 @@ IpList::~IpList ()
 int
 IpList::count () const
 {
-  qDebug() << Q_FUNC_INFO << interfaces.count();
   return interfaces.count();
 }
 
@@ -92,20 +93,18 @@ IpList::rowCount (const QModelIndex & index) const
 {
   Q_UNUSED (index)
   int nrows = count();
-
-  qDebug() << Q_FUNC_INFO << index << nrows;
   return nrows;
 }
 
 QVariant
 IpList::data (const QModelIndex & index, int role) const
 {
-  qDebug() << Q_FUNC_INFO << index << role;
   QVariant retvar (QString ("unknown"));
   int row = index.row ();
   if (0 > row || row >= count() ) {
     return QVariant (QString ("bad row"));
   }
+  QStringList atts = interface(row)->attributes().split("\n");
   switch (role) {
     case Type_Name:
       retvar = interface(row)->name();
@@ -113,10 +112,12 @@ IpList::data (const QModelIndex & index, int role) const
     case Type_Attributes:
       retvar = interface(row)->attributes();
       break;
+    case Type_AttribLines:
+      retvar = atts.count();
+      break;
     default:
       break;
   }
-  qDebug() << Q_FUNC_INFO << "return" << retvar;
   return retvar;
 }
 
@@ -228,42 +229,21 @@ IpList::getData ()
   QByteArray bytes = process.readAll ();
   QString newRaw (QString::fromUtf8(bytes));
   QStringList lines = newRaw.split('\n');
-  qDebug() << " process had " << lines.count() << "lines to say";
   resultLines.append (lines);
-  qDebug() << "resultLines now has" << resultLines.count() << "lines";
 }
 
 void 
 IpList::doneFinished (int exitCode, QProcess::ExitStatus exitStatus)
 {
   qDebug() << Q_FUNC_INFO << exitCode << exitStatus;
+  beginResetModel();
   Q_UNUSED (exitCode)
   Q_UNUSED (exitStatus)
   getData (); 
   analyze ();
   emit done ();
-  QModelIndex topLeft = (QAbstractListModel::index (0,0));
-  QModelIndex botRight = QAbstractListModel::index (count()-1, 0);
-//  qDebug() << Q_FUNC_INFO << "\n\t\tdata changed from" << topLeft.row() << " to " << botRight.row();
-//  for (int r=0;r<count(); ++r) {
-//    qDebug() << "\n\t\t" << r;
-//    topLeft = this->index(r,0);
-//    botRight = this->index(r,1);
-//    qDebug() << "\n\t\tchanged " << topLeft << "\n\t\t\t" << botRight;
-//    emit dataChanged (topLeft,botRight);
-//  }
-  qDebug() << "\n\t\tchanged " << topLeft << "\n\t\t\t" << botRight;
-  emit dataChanged (topLeft, botRight);
-//  revert ();
-  emit freshData();
-  qDebug() << "after emit fresh";
 
-  int rc = rowCount();
-  for (int r=0; r<rc; ++r) {
-    QModelIndex rindex = QAbstractListModel::index (r,0);
-    qDebug() << "\n\n=========\nInterface " << r << " called " << data(rindex,Type_Name);
-    qDebug() << "\tvalues" << data(rindex,Type_Attributes);
-  }
+  endResetModel();
 
 }
 
@@ -282,20 +262,17 @@ IpList::analyze ()
     if (!line.startsWith (" ")) { // new interface
       if (!currentIF->isEmpty()) {
         interfaces.append (currentIF); // append previous one
-        qDebug() << "\n\nlast interface seen:" << currentIF->name() << currentIF->attributes();
       }
       currentIF = new NetInterface;
       parseFirstLine (line, *currentIF);
     } else {
+      line += "\n";
       addLine (line, *currentIF);
     }
   }
   if (!currentIF->isEmpty()) {
     interfaces.append (currentIF);
-    qDebug() << "new interface " << currentIF;
   }
-  qDebug() << Q_FUNC_INFO << "came up with " << interfaces.count();
-  qDebug() << Q_FUNC_INFO << interfaces;
 }
 
 void
@@ -310,7 +287,11 @@ IpList::parseFirstLine (const QString & line, NetInterface & iface)
   parts.removeFirst();
   parts.removeFirst();
   if (!parts.isEmpty()) {
-    iface.attributes = parts.join (" ").trimmed();
+    QString ps;
+    for (int p=0; p<parts.count(); ++p) {
+      ps += parts.at(p).trimmed() + "\n";
+    }
+    iface.attributes = ps;
   }
 }
 
@@ -338,7 +319,11 @@ IpList::addAddress (const QString & line, NetInterface & iface)
   parts.removeFirst();
   parts.removeFirst();
   if (!parts.isEmpty()) {
-    addr.appendAttribute (parts.join (" ").trimmed());
+    for (int p=0; p<parts.count(); ++p) {
+      QString ps = parts.at(p).trimmed();
+      ps += "\n";
+      addr.appendAttribute(ps);
+    }
   }
   iface.appendAddress (addr);
 }
@@ -351,7 +336,7 @@ IpList::addAddressAttribute (const QString & line, NetInterface & iface)
   }
   NetAddress & addr (*iface.address(iface.addressCount() - 1));
   QStringList parts = line.split (QRegExp ("\\s+"));
-  addr.appendAttribute (parts.join (" ").trimmed());
+  addr.appendAttribute (parts.join ("\n").trimmed());
 }
 
 QDebug

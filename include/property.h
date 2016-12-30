@@ -26,6 +26,7 @@
  * slighlty modified from code by Gabriel Beddington
  */
 
+#include <QList>
 
 namespace geuzen {
 

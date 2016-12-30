@@ -1,4 +1,4 @@
-import QtQuick 2.5
+import QtQuick 2.7
 import moui.geuzen.utils.static 1.0
 
 
@@ -26,6 +26,7 @@ import moui.geuzen.utils.static 1.0
 
 Rectangle {
     id: mainBox
+    objectName: "MainBox";
     color: "transparent"
     property color mainColor: "yellow"
     property int rowHeight: (isProbablyPhone ? 64 : 42)
@@ -35,6 +36,7 @@ Rectangle {
     rotation: isPortrait ? -90 : 0
     GeuzenIpList {
         id: ipList
+        objectName: "RealIpList";
         css: ".iplist {font-style:italic;font-size:small; color:white; background-color:green}"
         onFreshData: {
             console.log("fresh data dignal caught in ",ipList);
@@ -55,7 +57,7 @@ Rectangle {
                     id: interfaceNameBox
                     height: rowHeight
                     width: mainWidth * 0.2
-                    radius: 0.3333 * height
+                    radius: 0.4 * height
                     color: "green"
                     border.color: Qt.lighter (color, 1.1)
                     border.width: 2
@@ -72,7 +74,7 @@ Rectangle {
 
                 Rectangle {
                     id: interfaceAttrBox
-                    height: rowHeight
+                    height: rowHeight ;
                     width: mainWidth - interfaceNameBox.width - interfaceRow.spacing
                     radius: 0.1 * height
                     color: Qt.lighter (mainColor)
@@ -80,8 +82,9 @@ Rectangle {
                         id: interfaceAttrText
                         wrapMode: Text.Wrap
                         width: parent.width
-                        font.pointSize: interfaceNameText.font.pointSize * 0.8
+                        font.pixelSize: 14;
                         anchors { centerIn: parent }
+                        z : parent.z + 5;
                         text: attributes
                     } // Text
                     MouseArea {
@@ -92,10 +95,10 @@ Rectangle {
             } // Row
             Rectangle {
                 id: interfaceDetailBox
-                height: 3
                 width: mainWidth
                 color: Qt.darker (mainColor)
-                property bool isHidden:false; // true
+                property bool isHidden:true;
+                property int numDetailLines: lines;
                 function toggleVisible () {
                     isHidden = !isHidden
 //                    ipList.populateText (index, detailTextBrowser, !isHidden)
@@ -104,10 +107,19 @@ Rectangle {
                     id: detailListBox
                     visible: !interfaceDetailBox.isHidden
                     width: parent.width
-                    height: detailTextBrowser.height
+                    height: (detailTextBrowser.font.pixelSize +3) * interfaceDetailBox. numDetailLines;
                     color: interfaceDetailBox.color
+                    Flickable {
+                        flickableDirection: Flickable.HorizontalAndVerticalFlick;
+                        TextEdit {
+                            id: detailTextBrowser;
+                            font.pixelSize: 16;
+                            text: attributes;
+                        }
+                    }
+
 //                    GeuzenTextBrowser {
-//                        id: detailTextBrowser
+//                        id: detailTextBrowserHigh
 //                        name: "geuzenBrowser_" + index
 //                        onNewData: {
 //                            consol.log("detail text index ",index,
@@ -115,25 +127,6 @@ Rectangle {
 //                            itemValue.text = value;
 //                        }
 //                    }
-                    Text {
-                        id: itemValue;
-                        font.pixelSize: 14;
-                        text: detailTextBrowser.value;
-                    }
-
-                    Connections {
-                        target: ipList;
-                        onFreshData: {
-                            console.log ("\n\n\n====================\nHave Fresh Data");
-                            var cnt = ipList.count();
-                            console.log ("------------?",cnt,"rows");
-                            var i;
-                            for (i=0;i<cnt ;++i) {
-                                console.log("data for row",i);
-                                ipList.populateText(i,detailTextBrowser,false)
-                            }
-                        }
-                    }
                 }
 
                 states: [
@@ -167,14 +160,6 @@ Rectangle {
         color: normalColor;
         anchors { top: mainBox.top; horizontalCenter: mainBox.horizontalCenter }
         Row {
-            Timer {
-                id: lieAboutFresh;
-                interval: 2000;
-                onTriggered: {
-                    ipList.sayFresh();
-                }
-            }
-
             spacing: 4
             anchors {centerIn:parent}
             Rectangle {
@@ -197,7 +182,7 @@ Rectangle {
                     onReleased: {
                         refreshButton.color = refreshBox.normalColor;
                         ipList.read();
-                        lieAboutFresh.start();
+//                        lieAboutFresh.start();
                     }
                 }
             }
@@ -245,13 +230,10 @@ Rectangle {
 //                ipList.populateText (ifIndex, ipListView, false)
             }
             delegate: interfaceDelegate
-            model: ipList
+            model: ipList;
         }
     }
     Component.onCompleted: {
-        console.log ("after loaded, ipList is "+ipList);
-        console.log ("ListView is ",ipListView);
-        console.log ("\tdelegate ",ipListView.delegate);
         ipList.read ()
     }
 

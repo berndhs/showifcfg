@@ -85,7 +85,8 @@ private:
 
   enum Data_Type {
     Type_Name = Qt::UserRole+1,
-    Type_Attributes = Qt::UserRole+2
+    Type_Attributes = Qt::UserRole+2,
+    Type_AttribLines =  Qt::UserRole+3
   };
 
 //  void fillBrowser (int ifaceNdx, QmlTextBrowser * browser);

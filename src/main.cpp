@@ -59,6 +59,9 @@ main (int argc, char *argv[])
 
   app.setWindowIcon (QIcon (":/icon.png"));
   view->setSource (QUrl ("qrc:ipaddr.qml"));
+  QQuickItem * root = view->rootObject();
+  QObject * listTop = root->findChild<QObject*>("RealIpList");
+  qDebug() << Q_FUNC_INFO << "found model at " << listTop;
   //view->setSource (QUrl::fromLocalFile ("qml/main.qml"));
   if (isPhone) {
     view->setGeometry (0,0,800,480); // won't be full screen on N950 without this
