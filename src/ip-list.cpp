@@ -104,16 +104,21 @@ IpList::data (const QModelIndex & index, int role) const
   if (0 > row || row >= count() ) {
     return QVariant (QString ("bad row"));
   }
-  QStringList atts = interface(row)->attributes().split("\n");
   switch (role) {
     case Type_Name:
       retvar = interface(row)->name();
       break;
     case Type_Attributes:
-      retvar = QString("<p>%1</p>").arg(interface(row)->attributes());
+      {
+        QStringList atts = interface(row)->attributes().split("\n");
+        retvar = atts.join(" ").replace("<br>"," ");
+      }
       break;
     case Type_AttribLines:
-      retvar = atts.count();
+      {
+        QStringList atts = interface(row)->attributes().split("<br>");
+        retvar = atts.count();
+      }
       break;
     default:
       break;
@@ -266,7 +271,7 @@ IpList::analyze ()
       currentIF = new NetInterface;
       parseFirstLine (line, *currentIF);
     } else {
-      line += "" "";
+      line += "\n";
       addLine (line, *currentIF);
     }
   }

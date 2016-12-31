@@ -114,7 +114,12 @@ Rectangle {
                         flickableDirection: Flickable.HorizontalAndVerticalFlick;
                         Text {
                             id: detailTextBrowser;
-                            color: "yellow"
+                            width: detailListBox.width/2;
+                            anchors {
+                                right: detailListBox.right;
+                            }
+
+                            color: "white"
                             wrapMode: Text.Wrap
                             font.pixelSize: 16;
                             text: attributes;
