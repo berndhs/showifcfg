@@ -99,6 +99,7 @@ Rectangle {
                 color: Qt.darker (mainColor)
                 property bool isHidden:true;
                 property int numDetailLines: lines;
+                property string detailColor: "white";
                 function toggleVisible () {
                     isHidden = !isHidden
 //                    ipList.populateText (index, detailTextBrowser, !isHidden)
@@ -108,25 +109,17 @@ Rectangle {
                     visible: !interfaceDetailBox.isHidden
                     width: parent.width
                     height: (detailTextBrowser.font.pixelSize +3) * interfaceDetailBox. numDetailLines;
-                    color: interfaceDetailBox.color
+                    color: interfaceDetailBox.detailColor;
                     Flickable {
                         flickableDirection: Flickable.HorizontalAndVerticalFlick;
-                        TextEdit {
+                        Text {
                             id: detailTextBrowser;
+                            color: "yellow"
+                            wrapMode: Text.Wrap
                             font.pixelSize: 16;
                             text: attributes;
                         }
                     }
-
-//                    GeuzenTextBrowser {
-//                        id: detailTextBrowserHigh
-//                        name: "geuzenBrowser_" + index
-//                        onNewData: {
-//                            consol.log("detail text index ",index,
-//                                       " new data from "+name);
-//                            itemValue.text = value;
-//                        }
-//                    }
                 }
 
                 states: [
@@ -145,7 +138,7 @@ Rectangle {
                         PropertyChanges {
                             target: interfaceDetailBox
                             height: detailTextBrowser.height
-                            color: "red"
+                            detailColor: "blue";
                         }
                     }
                 ]
@@ -196,6 +189,7 @@ Rectangle {
                 border.width: 2
                 Text {
                     id: doneText;
+                    wrapMode: Text.Wrap
                     anchors.centerIn: parent
                     text: qsTr("Done")
                 }

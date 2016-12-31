@@ -110,7 +110,7 @@ IpList::data (const QModelIndex & index, int role) const
       retvar = interface(row)->name();
       break;
     case Type_Attributes:
-      retvar = interface(row)->attributes();
+      retvar = QString("<p>%1</p>").arg(interface(row)->attributes());
       break;
     case Type_AttribLines:
       retvar = atts.count();
@@ -164,7 +164,7 @@ QHash<int, QByteArray> IpList::roleNames() const
 //    body.append ("</td><td>");
 //    body.append (iface->address(i)->address());
 //    body.append ("</td>\n</tr>\n<tr><td></td><td>");
-//    body.append (iface->address(i)->attributes().join("<br>\n"));
+//    body.append (iface->address(i)->attributes().join("" "\n"));
 //    body.append ("</td>\n</tr>\n");
 //  }
 //  body.append ("</table>\n</body>");
@@ -266,7 +266,7 @@ IpList::analyze ()
       currentIF = new NetInterface;
       parseFirstLine (line, *currentIF);
     } else {
-      line += "\n";
+      line += "" "";
       addLine (line, *currentIF);
     }
   }
@@ -289,7 +289,7 @@ IpList::parseFirstLine (const QString & line, NetInterface & iface)
   if (!parts.isEmpty()) {
     QString ps;
     for (int p=0; p<parts.count(); ++p) {
-      ps += parts.at(p).trimmed() + "\n";
+      ps += parts.at(p).trimmed() + "" "";
     }
     iface.attributes = ps;
   }
@@ -299,10 +299,12 @@ void
 IpList::addLine (const QString & line, NetInterface & iface)
 {
   int startPos = line.indexOf (QRegExp("\\S"), QString::SkipEmptyParts);
+  QString lline (line);
+  lline.prepend("\n<br<");
   if (startPos < 5) {
-    addAddress (line, iface);
+    addAddress (lline, iface);
   } else {
-    addAddressAttribute (line, iface); 
+    addAddressAttribute (lline, iface);
   }
 }
 
@@ -321,7 +323,7 @@ IpList::addAddress (const QString & line, NetInterface & iface)
   if (!parts.isEmpty()) {
     for (int p=0; p<parts.count(); ++p) {
       QString ps = parts.at(p).trimmed();
-      ps += "\n";
+      ps += "" "";
       addr.appendAttribute(ps);
     }
   }
@@ -336,7 +338,7 @@ IpList::addAddressAttribute (const QString & line, NetInterface & iface)
   }
   NetAddress & addr (*iface.address(iface.addressCount() - 1));
   QStringList parts = line.split (QRegExp ("\\s+"));
-  addr.appendAttribute (parts.join ("\n").trimmed());
+  addr.appendAttribute (parts.join ("" "").trimmed());
 }
 
 QDebug
