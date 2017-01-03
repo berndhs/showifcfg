@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROJECT=showifcfg
+PROJECT=shownetif
 VERSION=$(grep "^VERSION" $PROJECT.pro | \
                 awk -F \= '{print $2}' | \
                 sed 's/ //')

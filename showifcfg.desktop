@@ -1,8 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=showifcfg
-GenericName=showifcfg
-Comment=Utility to display ip interface configurations
-Exec=showifcfg
-Icon=showifcfg
-Categories=Utility;Network;

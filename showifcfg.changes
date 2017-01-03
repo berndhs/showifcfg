@@ -1,6 +1,0 @@
-* Wed Aug 10 2011 Bernd Stramm <bernd.stramm@gmail.com> - 0.2.0
-- use geuzen-qml-utils plugin instead of static .cpp
-
-* Tue Aug 09 2011 Bernd Stramm <bernd.stramm@gmail.com> - 0.1.2
-- allow editing so that copy works
-- different colors, button borders
