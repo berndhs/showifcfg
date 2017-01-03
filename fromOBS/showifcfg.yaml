@@ -1,0 +1,28 @@
+Name: showifcfg
+Summary: Show Ifconfig Utility
+Version: 0.2.0
+Release: 1
+Group: System/GUI/Other
+License: GPLv2
+URL: http://moui.sourceforge.net
+Sources:
+    - "%{name}-%{version}.tar.bz2"
+Description: |
+    Utility to show network configuration
+    
+
+PkgBR:
+    - pkgconfig(QtCore) >= 4.7.0
+    - pkgconfig(QtDeclarative) >= 4.7.0
+    - gcc-c++
+
+Requires:
+    - geuzen-qml-utils
+
+Configure: none
+Builder: qmake
+Files:
+    - /usr/bin/showifcfg
+    - /usr/share/applications/showifcfg.desktop
+    - /usr/share/pixmaps/showifcfg.png
+
