@@ -3,6 +3,6 @@
   <file alias="ipaddr.qml">qml/ipaddr.qml</file>
 </qresource>
 <qresource>
-  <file alias="icon.png">images/showifcfg.png</file>
+  <file alias="icon.png">images/showinetif.png</file>
 </qresource>
 </RCC>

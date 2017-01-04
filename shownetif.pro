@@ -12,8 +12,8 @@ INCLUDEPATH += ./include
 
 RESOURCES = $${MYNAME}.qrc
 
-TARGET = shownetif
-shownetif.path = /usr/local/bin
+TARGET = $${MYNAME}
+$${MYNAME}.path = /usr/local/bin
 
 MOC_DIR = temp
 OBJECTS_DIR = temp
@@ -34,7 +34,7 @@ HEADERS = \
     include/property.h \
 #    include/qml-text-browser.h
 
-INSTALLS = shownetif
+INSTALLS = $${MYNAME}
 
 OTHER_FILES += \
     qtc_packaging/debian_harmattan/rules \
@@ -46,7 +46,7 @@ OTHER_FILES += \
     notes.txt
 
 unix:!symbian:!maemo5 {
-    target.path = /opt/shownetif/bin
+    target.path = /opt/$${MYNAME}/bin
     INSTALLS += target
 }
 
