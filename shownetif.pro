@@ -13,7 +13,7 @@ INCLUDEPATH += ./include
 RESOURCES = $${MYNAME}.qrc
 
 TARGET = $${MYNAME}
-$${MYNAME}.path = /usr/local/bin
+$${MYNAME}.path = /usr/bin
 
 MOC_DIR = temp
 OBJECTS_DIR = temp
@@ -46,7 +46,7 @@ OTHER_FILES += \
     notes.txt
 
 unix:!symbian:!maemo5 {
-    target.path = /opt/$${MYNAME}/bin
+    target.path = /usr/bin/
     INSTALLS += target
 }
 
