@@ -26,6 +26,7 @@ SOURCES = \
     src/ip-list.cpp \
     src/main.cpp \
 #    src/qml-text-browser.cpp \
+    src/interfacemodel.cpp
 
 HEADERS = \
     include/gpl2.h \
@@ -33,6 +34,7 @@ HEADERS = \
     include/ip-list.h \
     include/property.h \
 #    include/qml-text-browser.h
+    src/interfacemodel.h
 
 INSTALLS = $${MYNAME}
 

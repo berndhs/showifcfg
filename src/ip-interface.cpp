@@ -4,7 +4,7 @@
 /****************************************************************
  * This file is distributed under the following license:
  *
- * Copyright (C) 2011, Bernd Stramm
+ * Copyright (C) 2017, Bernd Stramm
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -55,11 +55,27 @@ NetInterface::NetInterface (QObject *parent)
 
 NetInterface::~NetInterface ()
 {
-  for (auto ait = theAddresses.begin(); ait != theAddresses.end(); ait++) {
+  for (auto ait = theAddresses.begin(); ait != theAddresses.end(); ++ait) {
     if (*ait) {
       delete *ait;
     }
   }
+}
+
+QString
+NetInterface::allInfo()
+{
+   QStringList lines;
+   lines.append (name());
+   for (auto ait=theAddresses.begin(); ait != theAddresses.end(); ++ait) {
+     for (unsigned int i=0; i< addressCount(); ++i) {
+       QString ti = address(i)->type();
+       QString ad = address(i)->address();
+       lines.append (QString ("\t%1:\t%2").arg(ti).arg(ad));
+       lines.append (address(i)->attributes());
+     }
+   }
+   return lines.join("\n<br>");
 }
 
 NetInterface::NetInterface (const NetInterface & other)

@@ -1,3 +1,8 @@
+#ifndef INTERFACEMODEL_H
+#define INTERFACEMODEL_H
+
+#include <QAbstractItemModel>
+#include <QDebug>
 
 
 /****************************************************************
@@ -17,7 +22,53 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, 
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor,
  *  Boston, MA  02110-1301, USA.
  ****************************************************************/
 
+
+#include <QVariant>
+#include <QString>
+#include <QStringList>
+#include <QHash>
+#include <QByteArray>
+#include <QMap>
+
+namespace geuzen
+{
+
+class InterfaceModel : public QAbstractItemModel
+{
+  Q_OBJECT
+public:
+  InterfaceModel(QObject *parent);
+
+  virtual QHash<int, QByteArray> 	roleNames() const;
+  int rowCount();
+
+  QVariant data (const QModelIndex &index, int role) const;
+  void clear();
+
+  void addInterface (const QString &name, const QStringList &info);
+private:
+
+  enum Data_Type {
+    Data_IFName = Qt::UserRole+1,
+    Data_Info = Qt::UserRole+2
+  };
+
+
+  class ListEntry {
+    QString name;
+    QStringList info;
+  };
+
+  QHash <int,QByteArray> roles;
+
+  QList <ListEntry> m_data;
+
+};
+
+} // namespace
+
+#endif // INTERFACEMODEL_H

@@ -2,7 +2,7 @@
 /****************************************************************
  * This file is distributed under the following license:
  *
- * Copyright (C) 2011, Bernd Stramm
+ * Copyright (C) 2017, Bernd Stramm
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -26,8 +26,10 @@
 #include <QQmlContext>
 #include <QIcon>
 #include <QFont>
+#include <QObject>
+#include <QQuickItem>
 #include "ip-list.h"
-#include "qml-text-browser.h"
+#include "interfacemodel.h"
 
 #include <QDebug>
 
@@ -56,6 +58,7 @@ main (int argc, char *argv[])
 
   qmlRegisterType<geuzen::IpList>(uri, 1, 0, "GeuzenIpList");
 //  qmlRegisterType<geuzen::QmlTextBrowser>(uri, 1, 0, "GeuzenTextBrowser");
+  qmlRegisterType<geuzen::InterfaceModel>(uri,1,0,"GeuzenInterfaceModel");
 
   app.setWindowIcon (QIcon (":/icon.png"));
   view->setSource (QUrl ("qrc:ipaddr.qml"));

@@ -1,5 +1,5 @@
 This package was debianized by Bernd Stramm <bernd@unknown> on
-Tue, 16 Aug 2011 09:16:16 -0400.
+Tue, 16 Aug 2017 09:16:16 -0400.
 
 It was downloaded from <url://example.com>
 
@@ -32,7 +32,7 @@ License:
 On Debian systems, the complete text of the GNU General
 Public License can be found in `/usr/share/common-licenses/GPL'.
 
-The Debian packaging is (C) 2011, Bernd Stramm <bernd@unknown> and
+The Debian packaging is (C) 2017, Bernd Stramm <bernd@unknown> and
 is licensed under the GPL, see above.
 
 

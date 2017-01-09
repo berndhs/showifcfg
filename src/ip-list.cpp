@@ -3,7 +3,7 @@
 /****************************************************************
  * This file is distributed under the following license:
  *
- * Copyright (C) 2011, Bernd Stramm
+ * Copyright (C) 2017, Bernd Stramm
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -255,11 +255,12 @@ IpList::doneFinished (int exitCode, QProcess::ExitStatus exitStatus)
 void
 IpList::analyze ()
 {
-  qDebug() << Q_FUNC_INFO;
+  qDebug() << Q_FUNC_INFO << resultLines;
   interfaces.clear ();
   NetInterface * currentIF = new NetInterface;
-  auto lit = resultLines.begin();\
-  for (;lit != resultLines.end(); ++lit) {
+  \
+  for (auto lit = resultLines.begin();
+       lit != resultLines.end(); ++lit) {
     QString line (*lit);
     if (line.isEmpty()) {
       continue;
@@ -271,8 +272,8 @@ IpList::analyze ()
       currentIF = new NetInterface;
       parseFirstLine (line, *currentIF);
     } else {
-      line += "\n";
       addLine (line, *currentIF);
+      qDebug() << "added line" << line << "have [" << *currentIF << "]";
     }
   }
   if (!currentIF->isEmpty()) {
@@ -303,19 +304,18 @@ IpList::parseFirstLine (const QString & line, NetInterface & iface)
 void
 IpList::addLine (const QString & line, NetInterface & iface)
 {
-  int startPos = line.indexOf (QRegExp("\\S"), QString::SkipEmptyParts);
-  QString lline (line);
-  lline.prepend("\n<br<");
-  if (startPos < 5) {
-    addAddress (lline, iface);
+  bool haveNet = line.contains("inet");
+  if (false && haveNet) {
+    addAddress (line, iface);
   } else {
-    addAddressAttribute (lline, iface);
+    addAddressAttribute (line, iface);
   }
 }
 
 void
 IpList::addAddress (const QString & line, NetInterface & iface)
 {
+  qDebug() << Q_FUNC_INFO;
   NetAddress addr;
   QStringList parts = line.split (QRegExp ("\\s+"), QString::SkipEmptyParts);
   if (parts.count() < 2) {
@@ -328,11 +328,12 @@ IpList::addAddress (const QString & line, NetInterface & iface)
   if (!parts.isEmpty()) {
     for (int p=0; p<parts.count(); ++p) {
       QString ps = parts.at(p).trimmed();
-      ps += "" "";
+      ps.prepend("<br>\t");
       addr.appendAttribute(ps);
     }
   }
   iface.appendAddress (addr);
+  qDebug() << "\t\t" << line << iface;
 }
 
 void
@@ -343,7 +344,7 @@ IpList::addAddressAttribute (const QString & line, NetInterface & iface)
   }
   NetAddress & addr (*iface.address(iface.addressCount() - 1));
   QStringList parts = line.split (QRegExp ("\\s+"));
-  addr.appendAttribute (parts.join ("" "").trimmed());
+  addr.appendAttribute (parts.join (" ").trimmed());
 }
 
 QDebug

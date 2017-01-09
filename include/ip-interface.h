@@ -4,7 +4,7 @@
 /****************************************************************
  * This file is distributed under the following license:
  *
- * Copyright (C) 2011, Bernd Stramm
+ * Copyright (C) 2017, Bernd Stramm
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -32,6 +32,7 @@ namespace geuzen
 {
 
 class NetAddress : public QObject
+    // /brief NetAddress is a pair of type and address. Like "inet" and "123.123.100.123"
 {
 Q_OBJECT
 public:
@@ -74,6 +75,7 @@ private:
 
 
 class NetInterface : public QObject
+    // /brief NetInterface is an interface like "wlan0", which can have a bunch of addresses.
 {
 Q_OBJECT
 public:
@@ -95,6 +97,8 @@ public:
   Q_INVOKABLE int addressCount () const {
     return theAddresses.count();
   }
+
+  Q_INVOKABLE QString allInfo();
 
   Q_INVOKABLE void appendAddress (const NetAddress & address);
   Q_INVOKABLE bool isEmpty ();
