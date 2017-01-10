@@ -1,6 +1,7 @@
 #include "qmlrunner.h"
 #include <QTimer>
 #include <QUrl>
+#include <QQuickItem>
 
 namespace geuzen {
 
@@ -24,13 +25,28 @@ QmlRunner::init(QQuickView *view, QQmlEngine *engine)
   QIcon icon( QString("qrc:icon.png"));
   setWindowIcon(icon);
   QTimer::singleShot (3000,this,SLOT(run()));
+  m_viewer->setGeometry (0,0,100,100);
+  m_viewer->setSource (QUrl ("qrc:qml/ipaddr.qml"));
 }
 
 void
 QmlRunner::run()
 {
-  m_viewer->setGeometry (0,0,500,300);
   m_viewer->setSource (QUrl ("qrc:ipaddr.qml"));
+  QQuickItem *root = m_viewer->rootObject();
+  QObject *box = root->findChild<QObject*>("MainBox");
+  qDebug() << Q_FUNC_INFO << root << box;
+    qDebug() << Q_FUNC_INFO << "Box wdth" << root->property("mainWidth");
+
+    QVariant vwid = root->property("mainWidth");
+    QVariant vhi = root->property("mainHeight");
+    QVariant dense = root->property("pixPerMM");
+    qDebug() << Q_FUNC_INFO<< "w" << vwid << "h" << vhi << dense;
+    double mainWidth = vwid.toDouble();
+    double mainHeight = vhi.toDouble();
+    qDebug() << Q_FUNC_INFO << "width" << mainWidth << "height" << mainHeight;
+    m_viewer->setGeometry (0,0,mainWidth,mainHeight);
+    qDebug() << Q_FUNC_INFO << m_viewer->geometry();
 }
 
 } // namespace

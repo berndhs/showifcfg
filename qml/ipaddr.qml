@@ -1,5 +1,6 @@
 import QtQuick 2.7
 //import moui.geuzen.utils.static 1.0
+import QtQuick .Window 2.2
 
 
 /****************************************************************
@@ -31,8 +32,9 @@ Rectangle {
     property color mainColor: "yellow"
     property int rowHeight: (isProbablyPhone ? 64 : 42)
     property bool isPortrait: isProbablyPhone
-    property real mainWidth: isPortrait ? height : width
-    property real mainHeight: isPortrait ? width : height
+    property real mainWidth: Screen.desktopAvailableWidth //isPortrait ? height : width
+    property real mainHeight:  Screen.desktopAvailableHeight // isPortrait ? width : height
+    property real pixPerMM: Screen.pixelDensity;
     rotation: isPortrait ? -90 : 0
     Rectangle {
         id: refreshBox

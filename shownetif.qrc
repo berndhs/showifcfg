@@ -1,8 +1,7 @@
-<RCC version="1.0">
-<qresource>
-  <file alias="ipaddr.qml">qml/ipaddr.qml</file>
-</qresource>
-<qresource>
-  <file alias="icon.png">images/shownetif.png</file>
-</qresource>
+<RCC>
+    <qresource prefix="/">
+        <file alias="ipaddr.qml">qml/ipaddr.qml</file>
+        <file alias="icon.png">images/shownetif.png</file>
+        <file>qml/greenbox.qml</file>
+    </qresource>
 </RCC>
