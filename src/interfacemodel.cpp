@@ -29,7 +29,6 @@ namespace geuzen {
 InterfaceModel::InterfaceModel(QObject *parent)
   :QAbstractItemModel(parent)
 {
-  qDebug() << Q_FUNC_INFO;
   roles[Qt::DisplayRole] = "display";
   roles[Qt::DecorationRole] = "decoration";
   roles[Qt::EditRole] = "edit";
@@ -40,7 +39,6 @@ InterfaceModel::InterfaceModel(QObject *parent)
   roles[Data_Info] = "info";
   roles[Data_NumLines] = "numlines";
   clear();
-  qDebug() << Q_FUNC_INFO << roles;
 
   connect (&process, SIGNAL (readyRead()),
            this, SLOT (getData()));
@@ -51,7 +49,6 @@ InterfaceModel::InterfaceModel(QObject *parent)
 QHash<int, QByteArray>
 InterfaceModel::roleNames() const
 {
-  qDebug() << Q_FUNC_INFO;
   return roles;
 }
 
@@ -64,7 +61,6 @@ QModelIndex InterfaceModel::index(int row, int column, const QModelIndex &parent
 int
 InterfaceModel::rowCount(const QModelIndex &ndx) const
 {
-  qDebug() << Q_FUNC_INFO;
   Q_UNUSED(ndx);
   return m_data.count();
 }
@@ -72,7 +68,6 @@ InterfaceModel::rowCount(const QModelIndex &ndx) const
 QVariant
 InterfaceModel::data(const QModelIndex &index, int role) const
 {
-  qDebug() << Q_FUNC_INFO;
   int row = index.row();
   QVariant result ("Invalid Model Data");
   if (row < 0 || row >= m_data.count()) {
@@ -84,16 +79,12 @@ InterfaceModel::data(const QModelIndex &index, int role) const
   switch (role) {
     case Data_IFName:
       result = QVariant(m_data.at(row).name);
-      qDebug() << Q_FUNC_INFO << "ifname" << result;
       break;
     case Data_Info:
       result = QVariant(m_data.at(row).info.join("\n"));
-      qDebug() << Q_FUNC_INFO << "info" << result;
       break;
     case Data_NumLines:
       result = QVariant(m_data.at(row).info.count());
-
-      qDebug() << Q_FUNC_INFO << "numlines" << result;
       break;
     default:
       result = QVariant("Bad Data");
@@ -105,25 +96,21 @@ InterfaceModel::data(const QModelIndex &index, int role) const
 void
 InterfaceModel::clear ()
 {
-  qDebug() << Q_FUNC_INFO;
   m_data.clear();
 }
 
 void
 InterfaceModel::addInterface(const QString &name, const QStringList &info, const int fromLine)
 {
-  qDebug() << Q_FUNC_INFO;
   beginResetModel();
   ListEntry ntry (name,info) ;
   m_data.append(ntry);
   endResetModel();
-  qDebug() << Q_FUNC_INFO << "from " << fromLine << "\n" << name << info;
 }
 
 void
 InterfaceModel::read ()
 {
-  qDebug() << Q_FUNC_INFO;
   nextCmd.clear ();
   beginRemoveRows (QModelIndex(), 0, m_data.count()-1);
   m_data.clear ();
@@ -136,13 +123,11 @@ InterfaceModel::read ()
 void
 InterfaceModel::queueCommand (const QString & cmd)
 {
-  qDebug() << Q_FUNC_INFO;
   nextCmd << cmd;
 }
 
 void InterfaceModel::runCommand(const QString &cmd)
 {
-  qDebug() << Q_FUNC_INFO;
   QString doNext (cmd);
   if (doNext.isEmpty()) {
     if (!nextCmd.isEmpty()) {
@@ -157,7 +142,6 @@ void InterfaceModel::runCommand(const QString &cmd)
 void
 InterfaceModel::getData ()
 {
-  qDebug() << Q_FUNC_INFO;
   QByteArray bytes = process.readAll ();
   QString newRaw (QString::fromUtf8(bytes));
   QStringList lines = newRaw.split('\n');
@@ -167,13 +151,10 @@ InterfaceModel::getData ()
 void
 InterfaceModel::doneFinished (int exitCode, QProcess::ExitStatus exitStatus)
 {
-  qDebug() << Q_FUNC_INFO << exitCode << exitStatus;
   beginResetModel();
   Q_UNUSED (exitCode)
   Q_UNUSED (exitStatus)
   getData ();
-  qDebug() << Q_FUNC_INFO << __LINE__
-           << resultLines;
   analyze ();
 
   endResetModel();
@@ -183,7 +164,6 @@ InterfaceModel::doneFinished (int exitCode, QProcess::ExitStatus exitStatus)
 void
 InterfaceModel::analyze()
 {
-  qDebug() << Q_FUNC_INFO;
   beginResetModel();
   QStringList nextIF;
   QString     lastIFName;
@@ -193,7 +173,6 @@ InterfaceModel::analyze()
       // new interface
       int leftColon = line.indexOf (":",0);
       int scndColon = line.indexOf (":",leftColon+1);
-      qDebug() << "from " << leftColon << " to " << scndColon;
       if (leftColon >- 0 && scndColon > leftColon) {
         if (!lastIFName.isEmpty()) {
           addInterface(lastIFName,nextIF,__LINE__);
@@ -201,7 +180,6 @@ InterfaceModel::analyze()
         lastIFName = line.mid(leftColon+1,scndColon-leftColon).trimmed();
         nextIF.clear();
         QString rest = line.mid(scndColon,-1).trimmed();
-        qDebug() << "interface" << lastIFName << "rest of line: " << rest;
         nextIF.append (rest);
       } else { // nohing found, just add line
         nextIF.append(line);
@@ -214,7 +192,6 @@ InterfaceModel::analyze()
     addInterface(lastIFName,nextIF,__LINE__);
   }
   endResetModel();
-  qDebug() << Q_FUNC_INFO;
 }
 
 
