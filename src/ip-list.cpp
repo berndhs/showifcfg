@@ -33,6 +33,7 @@ IpList::IpList (QObject *parent)
   :QAbstractListModel (parent),
    process (this)
 {
+  ifM = new InterfaceModel(0);
   roles[Qt::DisplayRole] = "display";
   roles[Qt::DecorationRole] = "decoration";
   roles[Qt::EditRole] = "edit";
@@ -278,6 +279,9 @@ IpList::analyze ()
   }
   if (!currentIF->isEmpty()) {
     interfaces.append (currentIF);
+  }
+  if (ifM) {
+    ifM->addInterface(currentIF->name(),currentIF->allInfo().split("\n"));
   }
 }
 

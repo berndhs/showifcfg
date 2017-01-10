@@ -1,5 +1,5 @@
 import QtQuick 2.7
-import moui.geuzen.utils.static 1.0
+//import moui.geuzen.utils.static 1.0
 
 
 /****************************************************************
@@ -34,122 +34,6 @@ Rectangle {
     property real mainWidth: isPortrait ? height : width
     property real mainHeight: isPortrait ? width : height
     rotation: isPortrait ? -90 : 0
-    GeuzenIpList {
-        id: ipList
-        objectName: "RealIpList";
-        css: ".iplist {font-style:italic;font-size:small; color:white; background-color:green}"
-        onFreshData: {
-            console.log("fresh data dignal caught in ",ipList);
-            var i;
-            for (i=0; i<ipList.count(); ++i) {
-                ipListView.updateInterface(i);
-            }
-        }
-    }
-    Component {
-        id: interfaceDelegate
-
-        Column {
-            Row {
-                id: interfaceRow
-                spacing: 4
-                Rectangle {
-                    id: interfaceNameBox
-                    height: rowHeight
-                    width: mainWidth * 0.2
-                    radius: 0.4 * height
-                    color: "green"
-                    border.color: Qt.lighter (color, 1.1)
-                    border.width: 2
-                    Text {
-                        id: interfaceNameText
-                        anchors { centerIn: parent }
-                        text: name
-                    }
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: { interfaceDetailBox.toggleVisible () }
-                    }
-                } // Rect
-
-                Rectangle {
-                    id: interfaceAttrBox
-                    height: rowHeight ;
-                    width: mainWidth - interfaceNameBox.width - interfaceRow.spacing
-                    radius: 0.1 * height
-                    color: Qt.lighter (mainColor)
-                    Text {
-                        id: interfaceAttrText
-                        wrapMode: Text.Wrap
-                        width: parent.width
-                        font.pixelSize: 14;
-                        anchors { centerIn: parent }
-                        z : parent.z + 5;
-                        text: attributes
-                    } // Text
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: { interfaceDetailBox.toggleVisible () }
-                    }
-                } // Rect
-            } // Row
-            Rectangle {
-                id: interfaceDetailBox
-                width: mainWidth
-                color: Qt.darker (mainColor)
-                property bool isHidden:true;
-                property int numDetailLines: lines;
-                property string detailColor: "white";
-                function toggleVisible () {
-                    isHidden = !isHidden
-//                    ipList.populateText (index, detailTextBrowser, !isHidden)
-                }
-                Rectangle {
-                    id: detailListBox
-                    visible: !interfaceDetailBox.isHidden
-                    width: parent.width
-                    height: (detailTextBrowser.font.pixelSize +3) * interfaceDetailBox. numDetailLines;
-                    color: interfaceDetailBox.detailColor;
-                    Flickable {
-                        flickableDirection: Flickable.HorizontalAndVerticalFlick;
-                        Text {
-                            id: detailTextBrowser;
-                            width: detailListBox.width/2;
-                            anchors {
-                                right: detailListBox.right;
-                            }
-
-                            color: "white"
-                            wrapMode: Text.Wrap
-                            font.pixelSize: 16;
-                            text: attributes;
-                        }
-                    }
-                }
-
-                states: [
-                    State {
-                        name: "hidden"
-                        when: interfaceDetailBox.isHidden
-                        PropertyChanges {
-                            target: interfaceDetailBox
-                            height: 3
-                            color: Qt.darker (mainColor)
-                        }
-                    },
-                    State {
-                        name: "shown"
-                        when: ! interfaceDetailBox.isHidden
-                        PropertyChanges {
-                            target: interfaceDetailBox
-                            height: detailTextBrowser.height
-                            detailColor: "blue";
-                        }
-                    }
-                ]
-            }
-        } // Col
-    } // Component
     Rectangle {
         id: refreshBox
         height: rowHeight; width: mainWidth
@@ -179,11 +63,12 @@ Rectangle {
                     }
                     onReleased: {
                         refreshButton.color = refreshBox.normalColor;
-                        ipList.read();
+                        cppifmodel.read();
 //                        lieAboutFresh.start();
                     }
                 }
             }
+
             Rectangle {
                 id: doneButton
                 height: refreshBox.height - 8
@@ -217,6 +102,113 @@ Rectangle {
         width: mainWidth; height: mainHeight - refreshBox.height
         anchors { top: refreshBox.bottom; horizontalCenter: mainBox.horizontalCenter }
         clip: true
+        Component {
+            id: interfaceDelegate
+
+            Column {
+                Row {
+                    id: interfaceRow
+                    spacing: 4
+                    Rectangle {
+                        id: interfaceNameBox
+                        height: rowHeight
+                        width: mainWidth * 0.2
+                        radius: 0.4 * height
+                        color: "green"
+                        border.color: Qt.lighter (color, 1.1)
+                        border.width: 2
+                        Text {
+                            id: interfaceNameText
+                            anchors { centerIn: parent }
+                            text: ifname
+                        }
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: { interfaceDetailBox.toggleVisible () }
+                        }
+                    } // Rect
+
+                    Rectangle {
+                        id: interfaceAttrBox
+                        height: rowHeight ;
+                        width: mainWidth - interfaceNameBox.width - interfaceRow.spacing
+                        radius: 0.1 * height
+                        color: Qt.lighter (mainColor)
+                        Text {
+                            id: interfaceAttrText
+                            wrapMode: Text.Wrap
+                            width: parent.width
+                            height: interfaceNameBox.height
+                            clip: true;
+                            font.pixelSize: 8;
+                            anchors { centerIn: parent }
+                            z : parent.z + 5;
+                            text: info
+                        } // Text
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: { interfaceDetailBox.toggleVisible () }
+                        }
+                    } // Rect
+                } // Row
+                Rectangle {
+                    id: interfaceDetailBox
+                    width: mainWidth
+                    color: Qt.darker (mainColor)
+                    property bool isHidden:true;
+                    property int numDetailLines: numlines;
+                    property string detailColor: "white";
+                    function toggleVisible () {
+                        isHidden = !isHidden
+    //                    ipList.populateText (index, detailTextBrowser, !isHidden)
+                    }
+                    Rectangle {
+                        id: detailListBox
+                        visible: !interfaceDetailBox.isHidden
+                        width: mainWidth
+                        height: (detailTextBrowser.font.pixelSize +3) * interfaceDetailBox. numDetailLines;
+                        color: interfaceDetailBox.detailColor;
+                        Flickable {
+                            flickableDirection: Flickable.HorizontalAndVerticalFlick;
+                            Text {
+                                id: detailTextBrowser;
+                                width: detailListBox.width;
+                                anchors {
+                                    right: detailListBox.right;
+                                }
+
+                                color: "white"
+                                wrapMode: Text.Wrap
+                                font.pixelSize: 16;
+                                text: info;
+                            }
+                        }
+                    }
+
+                    states: [
+                        State {
+                            name: "hidden"
+                            when: interfaceDetailBox.isHidden
+                            PropertyChanges {
+                                target: interfaceDetailBox
+                                height: 3
+                                color: Qt.darker (mainColor)
+                            }
+                        },
+                        State {
+                            name: "shown"
+                            when: ! interfaceDetailBox.isHidden
+                            PropertyChanges {
+                                target: interfaceDetailBox
+                                height: detailTextBrowser.height
+                                detailColor: "blue";
+                            }
+                        }
+                    ]
+                }
+            } // Col
+        } // Component
+
         ListView {
             id: ipListView
             height: mainHeight
@@ -224,16 +216,14 @@ Rectangle {
             anchors {
                 fill: parent
             }
-            function updateInterface (ifIndex) {
-                console.log("updating interface "+ifIndex);
-//                ipList.populateText (ifIndex, ipListView, false)
-            }
             delegate: interfaceDelegate
-            model: ipList;
+            model: cppifmodel;
         }
     }
     Component.onCompleted: {
-        ipList.read ()
+        console.log("----------------------------\nloaded all of it");
+        cppifmodel.read();
+        console.log("cppifmodel at " + cppifmodel);
     }
 
 

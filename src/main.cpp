@@ -20,7 +20,7 @@
  *  Boston, MA  02110-1301, USA.
  ****************************************************************/
 
-#include <QGuiApplication>
+#include <QApplication>
 #include <QQuickView>
 #include <QQmlEngine>
 #include <QQmlContext>
@@ -28,7 +28,7 @@
 #include <QFont>
 #include <QObject>
 #include <QQuickItem>
-#include "ip-list.h"
+#include "qmlrunner.h"
 #include "interfacemodel.h"
 
 #include <QDebug>
@@ -36,44 +36,17 @@
 int
 main (int argc, char *argv[])
 {
-  QGuiApplication app (argc, argv);
-
-  bool isPhone (false); /*(!(imsi.isEmpty() || imei.isEmpty()));*/
+  QApplication app (argc, argv);
 
   QQuickView * view = new QQuickView(0);
   QQmlEngine * engine = view->engine();
-  QQmlContext * context = view->rootContext();
 
-  if (context) {
-    context->setContextProperty ("isProbablyPhone", QVariant(isPhone));
-  }
-
-  if (isPhone) {
-    QFont appFont = app.font();
-    appFont.setPointSizeF (appFont.pointSizeF() * 2);
-    app.setFont (appFont);
-  }
-
-  const char uri[] = "moui.geuzen.utils.static";
-
-  qmlRegisterType<geuzen::IpList>(uri, 1, 0, "GeuzenIpList");
-//  qmlRegisterType<geuzen::QmlTextBrowser>(uri, 1, 0, "GeuzenTextBrowser");
-  qmlRegisterType<geuzen::InterfaceModel>(uri,1,0,"GeuzenInterfaceModel");
+  geuzen::QmlRunner runner;
+  runner.init (view, engine);
 
   app.setWindowIcon (QIcon (":/icon.png"));
-  view->setSource (QUrl ("qrc:ipaddr.qml"));
-  QQuickItem * root = view->rootObject();
-  QObject * listTop = root->findChild<QObject*>("RealIpList");
-  qDebug() << Q_FUNC_INFO << "found model at " << listTop;
-  //view->setSource (QUrl::fromLocalFile ("qml/main.qml"));
-  if (isPhone) {
-    view->setGeometry (0,0,800,480); // won't be full screen on N950 without this
-    view->showFullScreen ();         // that is probably a bug in harmattan
-  } else {
-    view->setGeometry (0,0,500,300);
-  }
+
   qDebug () << " view set to size " << view->size();
-  view->setResizeMode (QQuickView::SizeRootObjectToView);
 
   view->show ();
   QObject::connect (engine, SIGNAL (quit()),&app, SLOT(quit()));

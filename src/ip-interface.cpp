@@ -114,4 +114,5 @@ NetInterface::appendAddress (const NetAddress & address)
   emit freshData();
 }
 
+
 } //namespace

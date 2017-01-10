@@ -30,6 +30,7 @@
 #include <QHash>
 #include <QByteArray>
 #include "ip-interface.h"
+#include "interfacemodel.h"
 
 namespace geuzen 
 {
@@ -58,6 +59,7 @@ public:
 
   Q_PROPERTY (QString css READ css WRITE setCss)
   Q_PROPERTY (QString html READ html WRITE setHtml)
+  Q_PROPERTY (InterfaceModel* ifModel READ ifModel)
 
   QHash<int, QByteArray> roleNames() const;
 
@@ -66,6 +68,11 @@ public:
 
   void setHtml (const QString & html);
   QString html () const;
+
+  InterfaceModel* ifModel() const
+  {
+    return ifM;
+  }
 
 private slots:
 
@@ -82,6 +89,7 @@ signals:
 
 
 private:
+  InterfaceModel *ifM;
 
   enum Data_Type {
     Type_Name = Qt::UserRole+1,
@@ -106,6 +114,7 @@ private:
 
   QString       theCss;
   QString       theHtml;
+
 
   QList <NetInterface*> interfaces;
 

@@ -9,6 +9,7 @@ QT += core gui widgets quick qml network
 QMAKE_CXXFLAGS += -std=c++11
 
 INCLUDEPATH += ./include
+INCLUDEPATH += ./src
 
 RESOURCES = $${MYNAME}.qrc
 
@@ -22,19 +23,21 @@ RCC_DIR = temp
 INCLUDEPATH += include/
 
 SOURCES = \
-    src/ip-interface.cpp \
-    src/ip-list.cpp \
+#    src/ip-interface.cpp \
+#    src/ip-list.cpp \
     src/main.cpp \
 #    src/qml-text-browser.cpp \
-    src/interfacemodel.cpp
+    src/interfacemodel.cpp \
+    src/qmlrunner.cpp
 
 HEADERS = \
     include/gpl2.h \
-    include/ip-interface.h \
-    include/ip-list.h \
+#    include/ip-interface.h \
+#    include/ip-list.h \
     include/property.h \
 #    include/qml-text-browser.h
-    src/interfacemodel.h
+    src/interfacemodel.h \
+    src/qmlrunner.h
 
 INSTALLS = $${MYNAME}
 

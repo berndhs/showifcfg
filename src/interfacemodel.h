@@ -32,7 +32,7 @@
 #include <QStringList>
 #include <QHash>
 #include <QByteArray>
-#include <QMap>
+#include <QProcess>
 
 namespace geuzen
 {
@@ -41,32 +41,70 @@ class InterfaceModel : public QAbstractItemModel
 {
   Q_OBJECT
 public:
-  InterfaceModel(QObject *parent);
+  InterfaceModel(QObject *parent = Q_NULLPTR);
+
+  Q_PROPERTY(int ifcount READ ifcount NOTIFY ifcountChanged)
 
   virtual QHash<int, QByteArray> 	roleNames() const;
-  int rowCount();
+  virtual int rowCount(const QModelIndex &ndx) const;
+  virtual int columnCount(const QModelIndex &ndx) const { return 1; }
+
+  virtual QModelIndex parent( const QModelIndex & duh) const { return duh; }
+
+  Q_INVOKABLE void read ();
+
+  QModelIndex index(int row, int column, const QModelIndex &parent) const;
 
   QVariant data (const QModelIndex &index, int role) const;
   void clear();
 
-  void addInterface (const QString &name, const QStringList &info);
+  void addInterface (const QString &name, const QStringList &info, const int fromLine=-1);
+
+  int ifcount() const
+  {
+    return m_data.count();
+  }
+
+public slots:
+
+  void queueCommand (const QString & cmd);
+  void runCommand (const QString & cmd = QString());
+  void getData ();
+  void doneFinished (int exitCode, QProcess::ExitStatus exitStatus);
+
+signals:
+  void ifcountChanged(int ifcount);
+
 private:
+
+  void  analyze ();
 
   enum Data_Type {
     Data_IFName = Qt::UserRole+1,
-    Data_Info = Qt::UserRole+2
+    Data_Info,
+    Data_NumLines
   };
 
 
   class ListEntry {
+  public:
     QString name;
     QStringList info;
+    ListEntry (QString n, QStringList nl) {
+      name = n;
+      info = nl;
+    }
   };
 
   QHash <int,QByteArray> roles;
 
-  QList <ListEntry> m_data;
+  QStringList   nextCmd;
+  QStringList   resultLines;
 
+  QList <ListEntry> m_data;
+  QProcess      process;
+
+  int m_ifcount;
 };
 
 } // namespace
